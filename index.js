@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true});
 
 //schema model
-const Todo = mongoose.model('Kitten', {
+const Todo = mongoose.model('todo', {
     text: String,
     complete: Boolean
 });
@@ -18,6 +18,7 @@ const Todo = mongoose.model('Kitten', {
 const typeDefs = `
   type Query {
     hello(name: String): String! 
+    todos: [Todo]
   }
   type Todo {
       id: ID!
@@ -34,6 +35,7 @@ const resolvers = {
   Query: {
     // if no name given, say "hello world"
     hello: (_, { name }) => `Hello ${name || 'World'}`,
+    todos: () => Todo.find()
   },
   Mutation: { 
       createTodo: async (_,{ text }) => {
